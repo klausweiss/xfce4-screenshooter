@@ -59,6 +59,9 @@ static void
 cb_imgur_toggled                   (GtkToggleButton    *tb,
                                     ScreenshotData     *sd);
 static void
+cb_imgur_copy_toggled              (GtkToggleButton    *tb,
+                                    ScreenshotData     *sd);
+static void
 cb_delay_spinner_changed           (GtkWidget          *spinner,
                                     ScreenshotData     *sd);
 static gchar
@@ -197,6 +200,12 @@ static void cb_imgur_toggled (GtkToggleButton *tb, ScreenshotData *sd)
 {
   if (gtk_toggle_button_get_active (tb))
     sd->action = UPLOAD_IMGUR;
+}
+
+static void cb_imgur_copy_toggled (GtkToggleButton *tb, ScreenshotData *sd)
+{
+  if (gtk_toggle_button_get_active (tb))
+    sd->action = UPLOAD_IMGUR_COPY;
 }
 
 
@@ -887,6 +896,7 @@ GtkWidget *screenshooter_actions_dialog_new (ScreenshotData *sd)
   GtkWidget *clipboard_radio_button, *open_with_radio_button;
   GtkWidget *zimagez_radio_button;
   GtkWidget *imgur_radio_button;
+  GtkWidget *imgur_copy_radio_button;
 
   GtkListStore *liststore;
   GtkWidget *combobox;
@@ -947,7 +957,7 @@ GtkWidget *screenshooter_actions_dialog_new (ScreenshotData *sd)
   gtk_box_pack_start (GTK_BOX (left_box), actions_alignment, TRUE, TRUE, 0);
 
   /* Create the actions box */
-  actions_table = gtk_table_new (5, 2, FALSE);
+  actions_table = gtk_table_new (6, 2, FALSE);
   gtk_container_add (GTK_CONTAINER (actions_alignment), actions_table);
   gtk_table_set_row_spacings (GTK_TABLE (actions_table), 6);
   gtk_table_set_col_spacings (GTK_TABLE (actions_table), 6);
@@ -1039,6 +1049,19 @@ GtkWidget *screenshooter_actions_dialog_new (ScreenshotData *sd)
   g_signal_connect (G_OBJECT (imgur_radio_button), "toggled",
                     G_CALLBACK (cb_imgur_toggled), sd);
   gtk_table_attach (GTK_TABLE (actions_table), imgur_radio_button, 0, 1, 4, 5, GTK_FILL, GTK_FILL, 0, 0);
+
+  /* Upload to imgur and copy to clipboard radio button */
+  imgur_copy_radio_button =
+    gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON (save_radio_button),
+                                                 _("Copy Imgur link do clipboard"));
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (imgur_copy_radio_button),
+                                (sd->action == UPLOAD_IMGUR_COPY));
+  gtk_widget_set_tooltip_text (imgur_copy_radio_button,
+                               _("Host the screenshot on Imgur, and copy"
+                                 "uploaded image's link do clipboard"));
+  g_signal_connect (G_OBJECT (imgur_copy_radio_button), "toggled",
+                    G_CALLBACK (cb_imgur_copy_toggled), sd);
+  gtk_table_attach (GTK_TABLE (actions_table), imgur_copy_radio_button, 0, 1, 5, 6, GTK_FILL, GTK_FILL, 0, 0);
 
   /* Preview box */
   preview_box = gtk_vbox_new (FALSE, 6);

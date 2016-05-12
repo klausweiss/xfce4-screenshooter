@@ -47,11 +47,18 @@ void
 cb_finished                        (ExoJob            *job,
                                     GtkWidget         *dialog);
 void
+cb_finished_base                   (ExoJob            *job,
+                                    GtkWidget         *dialog);
+void
 cb_update_info                     (ExoJob            *job,
                                     gchar             *message,
                                     GtkWidget         *label);
 void
 cb_image_uploaded                  (ScreenshooterJob  *job,
+                                    gchar             *upload_name,
+                                    gchar            **last_user);
+void
+cb_image_uploaded_to_imgur_to_copy (ScreenshooterJob  *job,
                                     gchar             *upload_name,
                                     gchar            **last_user);
 void

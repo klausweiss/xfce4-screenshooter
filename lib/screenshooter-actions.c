@@ -125,17 +125,21 @@ gboolean screenshooter_action_idle (ScreenshotData *sd)
           if (sd->action == OPEN)
             screenshooter_open_screenshot (screenshot_path, sd->app);
           else if (sd->action == UPLOAD_IMGUR) {
-              screenshooter_upload_to_imgur   (screenshot_path,
-                                               sd->title);
+              screenshooter_upload_to_imgur           (screenshot_path,
+                                                       sd->title);
+            }
+          else if (sd->action == UPLOAD_IMGUR_COPY) {
+              screenshooter_upload_to_imgur_copy_link (screenshot_path,
+                                                       sd->title);
             }
           else
             {
               gchar *new_last_user = NULL;
 
-              screenshooter_upload_to_zimagez (screenshot_path,
-                                               sd->last_user,
-                                               sd->title,
-                                               &new_last_user);
+              screenshooter_upload_to_zimagez         (screenshot_path,
+                                                       sd->last_user,
+                                                       sd->title,
+                                                       &new_last_user);
 
               if (new_last_user)
                 {

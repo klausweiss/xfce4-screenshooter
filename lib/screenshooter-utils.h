@@ -37,6 +37,7 @@
 
 
 void      screenshooter_copy_to_clipboard     (GdkPixbuf      *screenshot);
+void      screenshooter_copy_text_to_clipboard(const gchar    *text);
 void      screenshooter_read_rc_file          (const gchar    *file,
                                                ScreenshotData *sd);
 void      screenshooter_write_rc_file         (const gchar    *file,

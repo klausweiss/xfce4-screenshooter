@@ -18,6 +18,8 @@
  */
 
 #include "screenshooter-job-callbacks.h"
+#include "screenshooter-utils.h"
+
 
 /* Create and return a dialog with a throbber and a translated title
  * will be used during upload jobs
@@ -86,8 +88,10 @@ void cb_error (ExoJob *job, GError *error, gpointer unused)
 }
 
 
-
-void cb_finished (ExoJob *job, GtkWidget *dialog)
+/*  
+ *  Used for imgur to clipboard as it cannot unref job.
+ */
+void cb_finished_base (ExoJob *job, GtkWidget *dialog)
 {
   g_return_if_fail (EXO_IS_JOB (job));
   g_return_if_fail (GTK_IS_DIALOG (dialog));
@@ -96,6 +100,12 @@ void cb_finished (ExoJob *job, GtkWidget *dialog)
                                         G_SIGNAL_MATCH_FUNC,
                                         0, 0, NULL,
                                         cb_image_uploaded,
+                                        NULL);
+
+  g_signal_handlers_disconnect_matched (job,
+                                        G_SIGNAL_MATCH_FUNC,
+                                        0, 0, NULL,
+                                        cb_image_uploaded_to_imgur_to_copy,
                                         NULL);
 
   g_signal_handlers_disconnect_matched (job,
@@ -122,8 +132,16 @@ void cb_finished (ExoJob *job, GtkWidget *dialog)
                                         cb_finished,
                                         NULL);
 
-  g_object_unref (G_OBJECT (job));
   gtk_widget_destroy (dialog);
+}
+
+
+
+void cb_finished (ExoJob *job, GtkWidget *dialog)
+{
+  
+  g_object_unref (G_OBJECT (job));
+  cb_finished_base(job, dialog);
 }
 
 
@@ -348,6 +366,19 @@ cb_ask_for_information (ScreenshooterJob *job,
     }
 
   gtk_widget_destroy (dialog);
+}
+
+void cb_image_uploaded_to_imgur_to_copy (ScreenshooterJob *job,
+                                         gchar            *upload_name,
+                                         gchar           **last_user)
+{
+  const gchar *image_url;
+
+  g_return_if_fail (upload_name != NULL);
+
+  image_url = g_strdup_printf ("http://i.imgur.com/%s.png", upload_name);
+  // TODO: copy image_url to clipboard
+  screenshooter_copy_text_to_clipboard(image_url);
 }
 
 void cb_image_uploaded (ScreenshooterJob  *job,

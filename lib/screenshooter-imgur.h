@@ -31,7 +31,10 @@
 #include "screenshooter-simple-job.h"
 #include "katze-throbber.h"
 
-void screenshooter_upload_to_imgur (const gchar  *image_path,
-                                    const gchar  *title);
+void screenshooter_upload_to_imgur 				(const gchar  *image_path,
+                                    			 const gchar  *title);
+
+void screenshooter_upload_to_imgur_copy_link 	(const gchar  *image_path,
+                                    			 const gchar  *title);
 
 #endif

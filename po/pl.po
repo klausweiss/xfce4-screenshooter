@@ -160,6 +160,10 @@ msgstr "Hostuj na Imgur"
 msgid "Host the screenshot on Imgur, a free online image hosting service"
 msgstr "Wysyła przechwycony obraz do bezpłatnej usługi hostingowej Imgur"
 
+#: ../lib/screenshooter-dialogs.c:1059 ../src/main.c:98
+msgid "Host the screenshot on Imgur, and copy uploaded image's link do clipboard"
+msgstr "Wysyła obraz na Imgur i kopiuje bezpośredni link do schowka"
+
 #: ../lib/screenshooter-dialogs.c:1058
 msgid "<span weight=\"bold\" stretch=\"semiexpanded\">Preview</span>"
 msgstr "<span weight=\"bold\" stretch=\"semiexpanded\">Podgląd</span>"
@@ -374,26 +378,26 @@ msgstr "Określa domyślne położenie zapisywanych plików"
 msgid "Version information"
 msgstr "Wypisuje informacje o wersji"
 
-#: ../src/main.c:146
+#: ../src/main.c:152
 #, c-format
 msgid "Conflicting options: --%s and --%s cannot be used at the same time.\n"
 msgstr "Opcje --%s i --%s nie mogą zostać użyte w tym samym wierszu poleceń.\n"
 
-#: ../src/main.c:148
+#: ../src/main.c:154
 #, c-format
 msgid ""
 "The --%s option is only used when --fullscreen, --window or --region is "
 "given. It will be ignored.\n"
 msgstr "Opcja --%s jest używana tylko gdy --fullscreen, --window lub --region są podane. Zostanie ona zignorowana.\n"
 
-#: ../src/main.c:162
+#: ../src/main.c:168
 #, c-format
 msgid ""
 "%s: %s\n"
 "Try %s --help to see a full list of available command line options.\n"
 msgstr "%s: %s\nProszę wprowadzić „%s --help”, aby wypisać komunikat pomocy.\n"
 
-#: ../src/main.c:358
+#: ../src/main.c:397
 #, c-format
 msgid "%s is not a valid directory, the default directory will be used."
 msgstr "„%s” nie jest prawidłowym katalogiem. Zostanie użyty domyślny katalog."

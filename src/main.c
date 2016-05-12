@@ -36,6 +36,7 @@ gboolean mouse = FALSE;
 gboolean upload = FALSE;
 gboolean clipboard = FALSE;
 gboolean upload_imgur = FALSE;
+gboolean upload_imgur_copy = FALSE;
 gchar *screenshot_dir;
 gchar *application;
 gint delay = 0;
@@ -90,6 +91,11 @@ static GOptionEntry entries[] =
   {
     "imgur", 'i', G_OPTION_FLAG_IN_MAIN, G_OPTION_ARG_NONE, &upload_imgur,
     N_("Host the screenshot on Imgur, a free online image hosting service"),
+    NULL
+  },
+  {
+    "imgur-copy", 'm', G_OPTION_FLAG_IN_MAIN, G_OPTION_ARG_NONE, &upload_imgur_copy,
+    N_("Host the screenshot on Imgur, and copy uploaded image's link do clipboard"),
     NULL
   },
   {
@@ -251,6 +257,31 @@ int main (int argc, char **argv)
       g_printerr (conflict_error, "imgur", "open");
       return EXIT_FAILURE;
     }
+  else if (upload_imgur_copy && upload_imgur)
+    {
+      g_printerr (conflict_error, "imgur-copy", "imgur");
+      return EXIT_FAILURE;  
+    }
+  else if (upload_imgur_copy && upload)
+    {
+      g_printerr (conflict_error, "imgur-copy", "upload");
+      return EXIT_FAILURE;
+    }
+  else if (upload_imgur_copy && clipboard)
+    {
+    	g_printerr (conflict_error, "imgur-copy", "clipboard");
+    	return EXIT_FAILURE;
+    }
+  else if (upload_imgur_copy && (application != NULL))
+    {
+    	g_printerr (conflict_error, "imgur-copy", "open");
+    	return EXIT_FAILURE;
+    }
+  else if (upload_imgur_copy && (screenshot_dir != NULL))
+    {
+    	g_printerr (conflict_error, "imgur-copy", "save");
+    	return EXIT_FAILURE;
+    }
 
   /* Warn that action options, mouse and delay will be ignored in
    * non-cli mode */
@@ -260,6 +291,8 @@ int main (int argc, char **argv)
     g_printerr (ignore_error, "save");
   if (upload_imgur && !(fullscreen || window || region))
     g_printerr (ignore_error, "imgur");
+  if (upload_imgur_copy && !(fullscreen || window || region))
+    g_printerr (ignore_error, "imgur-copy");
   if (upload && !(fullscreen || window || region))
     g_printerr (ignore_error, "upload");
   if (clipboard && !(fullscreen || window || region))
@@ -335,6 +368,12 @@ int main (int argc, char **argv)
         {
           sd->app = g_strdup ("none");
           sd->action = UPLOAD_IMGUR;
+          sd->action_specified = TRUE;
+        }
+      else if (upload_imgur_copy)
+        {
+          sd->app = g_strdup ("none");
+          sd->action = UPLOAD_IMGUR_COPY;
           sd->action_specified = TRUE;
         }
       else

@@ -35,6 +35,7 @@ enum {
   OPEN,
   UPLOAD,
   UPLOAD_IMGUR,
+  UPLOAD_IMGUR_COPY,
 };
 
 

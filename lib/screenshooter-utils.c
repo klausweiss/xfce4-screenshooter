@@ -20,6 +20,8 @@
 #include "screenshooter-utils.h"
 #include <libxfce4ui/libxfce4ui.h>
 
+#include <gdk/gdk.h>
+#include <gtk/gtk.h>
 
 /* Public */
 
@@ -40,6 +42,26 @@ screenshooter_copy_to_clipboard (GdkPixbuf *screenshot)
     gtk_clipboard_get_for_display (gdk_display_get_default(), GDK_SELECTION_CLIPBOARD);
 
   gtk_clipboard_set_image (clipboard, screenshot);
+}
+
+
+
+
+/* Copy text to the Clipboard.
+* Code is from gnome-screenshooter.
+* @text: the text
+*/
+void
+screenshooter_copy_text_to_clipboard (const gchar *text)
+{
+  GtkClipboard *clipboard;
+
+  TRACE ("Adding text to the clipboard...");
+
+  clipboard =
+    gtk_clipboard_get_for_display (gdk_display_get_default(), GDK_SELECTION_CLIPBOARD);
+
+  gtk_clipboard_set_text (clipboard, text, -1);
 }
 
 

@@ -1,3 +1,8 @@
+With this fork new functionality was added - now you can upload
+screenshoot to Imgur and the link to the image is in your clipboard.
+
+---
+
 This application allows you to capture the entire screen, the active 
 window or a selected region. You can set the delay that elapses 
 before the screenshot is taken and the action that will be done with 

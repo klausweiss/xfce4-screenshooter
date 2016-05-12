@@ -34,6 +34,7 @@ imgur_upload_job (ScreenshooterJob *job, GArray *param_values, GError **error)
 {
   const gchar *image_path, *title;
   gchar *online_file_name = NULL;
+
   const gchar* proxy_uri;
   SoupURI *soup_proxy_uri;
 #if DEBUG > 0
@@ -100,6 +101,7 @@ imgur_upload_job (ScreenshooterJob *job, GArray *param_values, GError **error)
   msg = soup_form_request_new_from_multipart (upload_url, mp);
 
   // for v3 API - key registered *only* for xfce4-screenshooter!
+  // as this is xfce4-screenshooter fork, API key stays the same
   soup_message_headers_append (msg->request_headers, "Authorization", "Client-ID 66ab680b597e293");
   exo_job_info_message (EXO_JOB (job), _("Upload the screenshot..."));
   status = soup_session_send_message (session, msg);
@@ -172,6 +174,39 @@ void screenshooter_upload_to_imgur   (const gchar  *image_path,
   g_signal_connect (job, "image-uploaded", G_CALLBACK (cb_image_uploaded), NULL);
   g_signal_connect (job, "error", G_CALLBACK (cb_error), NULL);
   g_signal_connect (job, "finished", G_CALLBACK (cb_finished), dialog);
+  g_signal_connect (job, "info-message", G_CALLBACK (cb_update_info), label);
+
+  gtk_dialog_run (GTK_DIALOG (dialog));
+}
+
+
+/**
+ * screenshooter_upload_to_imgur_copy_link:
+ * @image_path: the local path of the image that should be uploaded to
+ * imgur.com.
+ *
+ * Uploads the image whose path is @image_path and copies link to clipboard
+ *
+ **/
+
+void screenshooter_upload_to_imgur_copy_link   (const gchar  *image_path,
+                                      const gchar  *title)
+{
+  ScreenshooterJob *job;
+  GtkWidget *dialog, *label;
+
+  g_return_if_fail (image_path != NULL);
+
+  dialog = create_throbber_dialog(_("Imgur"), &label);
+
+  job = screenshooter_simple_job_launch (imgur_upload_job, 2,
+                                          G_TYPE_STRING, image_path,
+                                          G_TYPE_STRING, title);
+
+  g_signal_connect (job, "ask", G_CALLBACK (cb_ask_for_information), NULL);
+  g_signal_connect (job, "image-uploaded", G_CALLBACK (cb_image_uploaded_to_imgur_to_copy), NULL);
+  g_signal_connect (job, "error", G_CALLBACK (cb_error), NULL);
+  g_signal_connect (job, "finished", G_CALLBACK (cb_finished_base), dialog);
   g_signal_connect (job, "info-message", G_CALLBACK (cb_update_info), label);
 
   gtk_dialog_run (GTK_DIALOG (dialog));
